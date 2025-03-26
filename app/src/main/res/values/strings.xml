@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">GreenBox</string>
+
+    <string name="onboarding_title">Тысячи курсов\nв одном месте</string>
+    <string name="action_continue">Продолжить</string>
+</resources>
