@@ -76,13 +76,6 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun DummyButton(text: String, modifier: Modifier = Modifier) {
-    Button(onClick = {}, modifier = modifier) {
-        Text(text, modifier = Modifier.fillMaxWidth())
-    }
-}
-
 data class CourseButton(
     val text: String,
     val rotation: Float = ROTATION_NONE,
@@ -201,7 +194,7 @@ fun OnboardingButton(
         button.rotation == CourseButton.ROTATION_NONE -> {
             BlurredButton(
                 onClick = {},
-                modifier = modifier.zIndex(1f),
+                modifier = modifier,
                 blurRadius = 21.dp
             ) {
                 Text(text = button.text)
@@ -212,7 +205,6 @@ fun OnboardingButton(
             Button(
                 onClick = {},
                 modifier = modifier
-                    .zIndex(0f)
                     .graphicsLayer(
                         rotationZ = button.rotation,
                         transformOrigin = TransformOrigin(
@@ -237,7 +229,7 @@ fun ActualRow(
     row: CourseRow,
     modifier: Modifier = Modifier
 ) = Row(
-    modifier,
+    modifier.zIndex(if (row.expanded) 0f else 1f),
     horizontalArrangement = Arrangement.spacedBy(4.dp)
 ) {
     for (button in row.buttons) {
