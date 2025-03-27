@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asComposeRenderEffect
@@ -34,7 +33,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.github.kimamik.greenbox.presentation.util.GBPreview
 import com.github.kimamik.greenbox.ui.theme.Glass
@@ -46,8 +44,8 @@ fun BlurredButton(
     enabled: Boolean = true,
     shape: Shape = ButtonDefaults.shape,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-    blurRadius: Dp = 10.dp,
-    edgeTreatment: BlurredEdgeTreatment = BlurredEdgeTreatment.Unbounded,
+    blurRadius: Float = 21f,
+    edgeTreatment: Shader.TileMode = Shader.TileMode.MIRROR,
     content: @Composable RowScope.() -> Unit
 ) {
     Box(
@@ -82,8 +80,8 @@ fun BlurredButton(
             Modifier.graphicsLayer(
                 renderEffect =
                     RenderEffect.createBlurEffect(
-                        21f, 21f,
-                        Shader.TileMode.MIRROR
+                        blurRadius, blurRadius,
+                        edgeTreatment
                     ).asComposeRenderEffect()
             )
         } else {
@@ -102,7 +100,7 @@ fun BlurredButton(
 @Preview
 @Composable
 private fun BlurredButtonPreview() = GBPreview {
-    BlurredButton(onClick = {}, modifier = Modifier.padding(16.dp), blurRadius = 21.dp) {
+    BlurredButton(onClick = {}, modifier = Modifier.padding(16.dp), blurRadius = 21f) {
         Text("Blurred button")
     }
 }

@@ -195,7 +195,7 @@ fun OnboardingButton(
             BlurredButton(
                 onClick = {},
                 modifier = modifier,
-                blurRadius = 21.dp
+                blurRadius = 21f
             ) {
                 Text(text = button.text)
             }
