@@ -13,18 +13,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +34,14 @@ import com.github.kimamik.greenbox.ui.theme.components.BlurredButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun OnboardingScreenRoot(modifier: Modifier = Modifier) {
-    OnboardingScreen(
-        modifier = Modifier.fillMaxSize()
-    )
+fun OnboardingScreenRoot() {
+    Scaffold { padding ->
+        OnboardingScreen(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        )
+    }
 }
 
 @Composable
@@ -61,7 +63,6 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .height(316.dp)
         )
-
 
         Spacer(Modifier.weight(1f))
         FilledIconButton(
@@ -152,37 +153,26 @@ private fun TagsFlow(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    var width by remember { mutableIntStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
+    scrollState.viewportSize
     Column(
         modifier = modifier
             .horizontalScroll(scrollState)
-            .onSizeChanged {
-                width = it.width
+            .onPlaced { layoutCoordinates ->
                 coroutineScope.launch {
-//                    scrollState.scrollTo(width / 4)
+                    val contentWidth = layoutCoordinates.size.width
+                    val screenWidth = scrollState.viewportSize
+                    val amountToScroll = (contentWidth - screenWidth) / 2
+                    scrollState.scrollTo(amountToScroll)
                 }
             },
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         for (row in courses.rows) {
             ActualRow(row)
         }
     }
-    /*
-        val texts = remember {
-            List(30) { Random.nextInt(10000, 99999).toString() }
-        }
-        LazyHorizontalStaggeredGrid(
-            rows = StaggeredGridCells.Fixed(5),
-            modifier = modifier
-        ) {
-            items(texts) {
-                FilledIconButton(onClick = {}) {
-                    Text(it)
-                }
-            }
-        }*/
 }
 
 @Composable
@@ -229,7 +219,8 @@ fun ActualRow(
     row: CourseRow,
     modifier: Modifier = Modifier
 ) = Row(
-    modifier.zIndex(if (row.expanded) 0f else 1f),
+    modifier
+        .zIndex(if (row.expanded) 0f else 1f),
     horizontalArrangement = Arrangement.spacedBy(4.dp)
 ) {
     for (button in row.buttons) {
