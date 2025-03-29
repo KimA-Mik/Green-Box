@@ -15,9 +15,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -33,26 +35,44 @@ import com.github.kimamik.greenbox.R
 import com.github.kimamik.greenbox.presentation.auth.components.AuthInput
 import com.github.kimamik.greenbox.presentation.auth.components.OkButton
 import com.github.kimamik.greenbox.presentation.auth.components.VkButton
+import com.github.kimamik.greenbox.presentation.util.Event
 import com.github.kimamik.greenbox.presentation.util.GBPreview
 
 @Composable
 fun LoginScreenRoot() {
     val viewModel: LoginScreenViewModel = viewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle()
     LoginScreen(
         state = state,
+        uiEvent = uiEvent,
         onEmailChange = viewModel::onEmailChange,
-        onPasswordChange = viewModel::onPasswordChange
+        onPasswordChange = viewModel::onPasswordChange,
+        clickVk = viewModel::clickVk,
+        clickOk = viewModel::clickOk
     )
 }
 
 @Composable
 fun LoginScreen(
     state: LoginScreenState,
+    uiEvent: Event<LoginScreenViewModel.UiEvent>,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    clickVk: () -> Unit,
+    clickOk: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val uriHandler = LocalUriHandler.current
+    LaunchedEffect(uiEvent) {
+        uiEvent.consume { event ->
+            when (event) {
+                LoginScreenViewModel.UiEvent.OpenOk -> uriHandler.openUri("https://ok.ru")
+                LoginScreenViewModel.UiEvent.OpenVk -> uriHandler.openUri("https://vk.com")
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier
     ) { padding ->
@@ -60,6 +80,8 @@ fun LoginScreen(
             state = state,
             onEmailChange = onEmailChange,
             onPasswordChange = onPasswordChange,
+            clickVk = clickVk,
+            clickOk = clickOk,
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
@@ -72,6 +94,8 @@ fun LoginScreenContent(
     state: LoginScreenState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    clickVk: () -> Unit,
+    clickOk: () -> Unit,
     modifier: Modifier = Modifier
 ) = Column(
     modifier = modifier.padding(horizontal = 16.dp),
@@ -113,7 +137,11 @@ fun LoginScreenContent(
     HorizontalDivider()
 
     Spacer(m.height(32.dp))
-    Socials()
+    Socials(
+        clickVk = clickVk,
+        clickOk = clickOk,
+        modifier = m
+    )
 }
 
 @Composable
@@ -192,13 +220,19 @@ fun Actions(
 }
 
 @Composable
-fun Socials(modifier: Modifier = Modifier) = Row(
+fun Socials(
+    clickVk: () -> Unit,
+    clickOk: () -> Unit,
+    modifier: Modifier = Modifier
+) = Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(16.dp)
 ) {
-    val m = Modifier.height(40.dp)
-    VkButton(onClick = {}, modifier = m.weight(1f))
-    OkButton(onClick = {}, modifier = m.weight(1f))
+    val m = Modifier
+        .height(40.dp)
+        .weight(1f)
+    VkButton(onClick = clickVk, modifier = m)
+    OkButton(onClick = clickOk, modifier = m)
 }
 
 @Preview
@@ -206,8 +240,11 @@ fun Socials(modifier: Modifier = Modifier) = Row(
 private fun LoginScreenPreview() = GBPreview {
     LoginScreen(
         state = LoginScreenState(),
+        uiEvent = Event(null),
         onEmailChange = {},
         onPasswordChange = {},
+        clickVk = {},
+        clickOk = {},
         modifier = Modifier.fillMaxSize()
     )
 }
