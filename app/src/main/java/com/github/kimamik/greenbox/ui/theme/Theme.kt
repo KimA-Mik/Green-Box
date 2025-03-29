@@ -8,7 +8,8 @@ import androidx.compose.runtime.Composable
 private val GreenBoxColorScheme = darkColorScheme(
     primary = Green,
     onPrimary = White,
-    background = Dark
+    background = Dark,
+    surfaceContainerHighest = LightGray,
 )
 
 @Composable

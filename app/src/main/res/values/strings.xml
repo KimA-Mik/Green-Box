@@ -3,4 +3,13 @@
 
     <string name="onboarding_title">Тысячи курсов\nв одном месте</string>
     <string name="action_continue">Продолжить</string>
+    <string name="login_page_title">Вход</string>
+    <string name="email_title">Email</string>
+    <string name="email_placeholder">example@gmail.com</string>
+    <string name="password_title">Пароль</string>
+    <string name="password_placeholder">Введите пароль</string>
+    <string name="action_login">Вход</string>
+    <string name="label_no_accaunt">"Нету аккаунте? "</string>
+    <string name="action_register">Регистрация</string>
+    <string name="action_forget_password">Забыл пароль</string>
 </resources>
