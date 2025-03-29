@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GreenBox"
 include(":app")
- 
+include(":domain")

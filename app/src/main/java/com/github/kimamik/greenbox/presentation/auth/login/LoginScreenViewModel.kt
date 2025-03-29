@@ -3,6 +3,7 @@ package com.github.kimamik.greenbox.presentation.auth.login
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.kimamik.greenbox.domain.auth.login.useCase.ValidateLoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,7 +13,9 @@ import javax.inject.Inject
 
 @Stable
 @HiltViewModel
-class LoginScreenViewModel @Inject constructor() : ViewModel() {
+class LoginScreenViewModel @Inject constructor(
+    private val validateLogin: ValidateLoginUseCase
+) : ViewModel() {
     private val login = MutableStateFlow("")
     private val password = MutableStateFlow("")
     private val isValid = MutableStateFlow(false)
@@ -27,9 +30,11 @@ class LoginScreenViewModel @Inject constructor() : ViewModel() {
 
     fun onEmailChange(value: String) {
         login.value = value
+        isValid.value = validateLogin(login.value, password.value)
     }
 
     fun onPasswordChange(value: String) {
         password.value = value
+        isValid.value = validateLogin(login.value, password.value)
     }
 }
