@@ -43,6 +43,10 @@ class LoginScreenViewModel @Inject constructor(
         isValid.value = validateLogin(login.value, password.value)
     }
 
+    fun enterApp() {
+        _uiEvent.value = Event(UiEvent.EnterApp)
+    }
+
     fun clickVk() {
         _uiEvent.value = Event(UiEvent.OpenVk)
     }
@@ -54,5 +58,6 @@ class LoginScreenViewModel @Inject constructor(
     sealed interface UiEvent {
         data object OpenVk : UiEvent
         data object OpenOk : UiEvent
+        data object EnterApp : UiEvent
     }
 }

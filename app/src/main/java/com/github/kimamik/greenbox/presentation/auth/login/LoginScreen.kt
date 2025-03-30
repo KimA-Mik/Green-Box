@@ -29,18 +29,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.kimamik.greenbox.R
 import com.github.kimamik.greenbox.presentation.auth.components.AuthInput
 import com.github.kimamik.greenbox.presentation.auth.components.OkButton
 import com.github.kimamik.greenbox.presentation.auth.components.VkButton
+import com.github.kimamik.greenbox.presentation.navigation.grapths.enterMainGraph
 import com.github.kimamik.greenbox.presentation.util.Event
 import com.github.kimamik.greenbox.presentation.util.GBPreview
+import com.github.kimamik.greenbox.presentation.util.LocalNavController
 
 @Composable
 fun LoginScreenRoot() {
-    val viewModel: LoginScreenViewModel = viewModel()
+    val viewModel: LoginScreenViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val uiEvent by viewModel.uiEvent.collectAsStateWithLifecycle()
     LoginScreen(
@@ -48,6 +50,7 @@ fun LoginScreenRoot() {
         uiEvent = uiEvent,
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
+        onEnterApp = viewModel::enterApp,
         clickVk = viewModel::clickVk,
         clickOk = viewModel::clickOk
     )
@@ -59,16 +62,19 @@ fun LoginScreen(
     uiEvent: Event<LoginScreenViewModel.UiEvent>,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onEnterApp: () -> Unit,
     clickVk: () -> Unit,
     clickOk: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uriHandler = LocalUriHandler.current
+    val navController = LocalNavController.current
     LaunchedEffect(uiEvent) {
         uiEvent.consume { event ->
             when (event) {
                 LoginScreenViewModel.UiEvent.OpenOk -> uriHandler.openUri("https://ok.ru")
                 LoginScreenViewModel.UiEvent.OpenVk -> uriHandler.openUri("https://vk.com")
+                LoginScreenViewModel.UiEvent.EnterApp -> navController.enterMainGraph()
             }
         }
     }
@@ -80,6 +86,7 @@ fun LoginScreen(
             state = state,
             onEmailChange = onEmailChange,
             onPasswordChange = onPasswordChange,
+            onEnterApp = onEnterApp,
             clickVk = clickVk,
             clickOk = clickOk,
             modifier = Modifier
@@ -94,6 +101,7 @@ fun LoginScreenContent(
     state: LoginScreenState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onEnterApp: () -> Unit,
     clickVk: () -> Unit,
     clickOk: () -> Unit,
     modifier: Modifier = Modifier
@@ -120,7 +128,7 @@ fun LoginScreenContent(
 
     Spacer(m.height(24.dp))
     Button(
-        onClick = {},
+        onClick = onEnterApp,
         modifier = m,
         enabled = state.validated
     ) {
@@ -243,6 +251,7 @@ private fun LoginScreenPreview() = GBPreview {
         uiEvent = Event(null),
         onEmailChange = {},
         onPasswordChange = {},
+        onEnterApp = {},
         clickVk = {},
         clickOk = {},
         modifier = Modifier.fillMaxSize()
