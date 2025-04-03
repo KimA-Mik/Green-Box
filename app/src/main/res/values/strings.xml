@@ -16,4 +16,8 @@
     <string name="nav_item_main">Главная</string>
     <string name="nav_item_favorites">Избранное</string>
     <string name="nav_item_account">Аккаунт</string>
+    <string name="hint_search_courses">Search courses…</string>
+    <string name="label_sort_by_date">По дате добавления</string>
+    <string name="action_course_details">Подробнее</string>
+    <string name="rouble_format">%1$s ₽</string>
 </resources>
