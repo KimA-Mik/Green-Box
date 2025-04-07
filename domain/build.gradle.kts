@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.github.kimamik.greenbox"
+    namespace = "com.github.kimamik.greenbox.domain"
     compileSdk = 35
 
     defaultConfig {
