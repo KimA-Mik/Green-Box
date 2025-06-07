@@ -64,6 +64,7 @@ dependencies {
 
 
     implementation(project(mapOf("path" to ":domain")))
+    implementation(project(mapOf("path" to ":data")))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
