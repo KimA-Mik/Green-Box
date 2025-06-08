@@ -44,6 +44,10 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.protobuf)
+
+
     implementation(project(mapOf("path" to ":domain")))
 
     testImplementation(libs.junit)

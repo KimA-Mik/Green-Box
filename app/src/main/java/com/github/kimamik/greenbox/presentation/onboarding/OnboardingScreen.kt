@@ -34,9 +34,12 @@ import com.github.kimamik.greenbox.ui.theme.components.BlurredButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun OnboardingScreenRoot() {
+fun OnboardingScreenRoot(
+    acceptOnboarding: () -> Unit
+) {
     Scaffold { padding ->
         OnboardingScreen(
+            acceptOnboarding = acceptOnboarding,
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
@@ -45,7 +48,10 @@ fun OnboardingScreenRoot() {
 }
 
 @Composable
-fun OnboardingScreen(modifier: Modifier = Modifier) {
+fun OnboardingScreen(
+    acceptOnboarding: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
         Spacer(Modifier.height(100.dp))
         Text(
@@ -66,7 +72,7 @@ fun OnboardingScreen(modifier: Modifier = Modifier) {
 
         Spacer(Modifier.weight(1f))
         FilledIconButton(
-            onClick = {},
+            onClick = acceptOnboarding,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -154,7 +160,6 @@ private fun TagsFlow(
 ) {
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
-    scrollState.viewportSize
     Column(
         modifier = modifier
             .horizontalScroll(scrollState)
@@ -235,5 +240,8 @@ fun ActualRow(
 @Preview
 @Composable
 private fun OnboardingScreenPreview() = GBPreview {
-    OnboardingScreen(Modifier.fillMaxSize())
+    OnboardingScreen(
+        acceptOnboarding = {},
+        modifier = Modifier.fillMaxSize()
+    )
 }
