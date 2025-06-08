@@ -9,14 +9,26 @@ import com.github.kimamik.greenbox.presentation.util.LocalNavController
 import com.github.kimamik.greenbox.ui.theme.GreenBoxTheme
 
 @Composable
-fun ApplicationScreen() = GreenBoxTheme {
+fun ApplicationScreen(
+    showOnboarding: Boolean = false,
+    acceptOnboarding: () -> Unit
+) = GreenBoxTheme {
 
     val navController = rememberNavController()
     CompositionLocalProvider(
         LocalNavController provides navController
     ) {
         Surface {
-            GBNavHost(navController = navController)
+            GBNavHost(
+                navController = navController,
+                showOnboarding = showOnboarding,
+                acceptOnboarding = {
+//                    navController.popBackStack()
+//                    navController.navigate(Routs.Auth)
+//                    navController.
+                    acceptOnboarding()
+                }
+            )
         }
     }
 }

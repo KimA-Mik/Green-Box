@@ -2,21 +2,17 @@ package com.github.kimamik.greenbox.presentation.navigation.grapths
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.github.kimamik.greenbox.presentation.courses.main.CoursesScreenRoot
-import com.github.kimamik.greenbox.presentation.navigation.NavItem
+import com.github.kimamik.greenbox.presentation.navigation.Routs.Main
 
-private const val COURSES_DESTINATION = "courses"
-fun NavGraphBuilder.mainGraph(
-    navController: NavHostController
-) {
-    navigation(startDestination = COURSES_DESTINATION, route = NavItem.Main.root) {
-        composable(COURSES_DESTINATION) {
+fun NavGraphBuilder.mainGraph() {
+    navigation<Main>(startDestination = Main.Courses) {
+        composable<Main.Courses> {
             CoursesScreenRoot()
         }
     }
 }
 
-fun NavController.enterMainGraph() = navigate(NavItem.entries.first().root)
+fun NavController.enterMainGraph() = navigate(Main)
