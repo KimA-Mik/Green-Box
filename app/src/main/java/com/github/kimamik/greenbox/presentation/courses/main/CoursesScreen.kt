@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kimamik.greenbox.R
+import com.github.kimamik.greenbox.presentation.courses.components.Course
 import com.github.kimamik.greenbox.presentation.navigation.GBNavBar
 import com.github.kimamik.greenbox.presentation.util.GBPreview
 import com.github.kimamik.greenbox.presentation.util.LocalHazeState
@@ -59,8 +62,8 @@ fun CoursesScreen(
                 state = state,
                 modifier = Modifier
                     .padding(paddingValues)
-                    .padding(top = 16.dp)
                     .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp)
             )
         }
     }
@@ -77,9 +80,11 @@ fun CourseScreenContent(
     ) {
         Search()
         Sort(modifier = Modifier.align(Alignment.End))
-        CourseScreenBody(state, modifier.fillMaxSize())
+        CourseScreenBody(
+            state = state,
+            modifier = Modifier.fillMaxSize()
+        )
     }
-
 }
 
 @Composable
@@ -132,12 +137,31 @@ fun Sort(
 fun CourseScreenBody(state: CourseScreenState, modifier: Modifier = Modifier) {
     when (state) {
         CourseScreenState.Error -> {}
-        is CourseScreenState.Loaded -> Box(modifier = modifier) {
-            CircularProgressIndicator()
-        }
+        is CourseScreenState.Loaded -> Courses(
+            state = state,
+            modifier = modifier
+        )
 
         CourseScreenState.Loading -> Box(modifier = modifier, contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+private fun Courses(
+    state: CourseScreenState.Loaded,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(state.courses, key = { it.id }) {
+            Course(
+                course = it,
+                onBookmarkClick = {}
+            )
         }
     }
 }
