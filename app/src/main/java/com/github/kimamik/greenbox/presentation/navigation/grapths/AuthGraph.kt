@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.github.kimamik.greenbox.presentation.auth.login.LoginScreenRoot
-import com.github.kimamik.greenbox.presentation.navigation.Routs.Auth
+import com.github.kimamik.greenbox.presentation.navigation.Rout.Auth
 
 fun NavGraphBuilder.authGraph() {
     navigation<Auth>(startDestination = Auth.Login) {
