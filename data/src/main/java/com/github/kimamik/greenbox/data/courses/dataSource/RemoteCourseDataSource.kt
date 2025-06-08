@@ -8,7 +8,7 @@ interface RemoteCourseDataSource {
 
     companion object {
         const val AVAILABLE_COURSES_BASE_URL =
-            "https://raw.githubusercontent.com/KimA-Mik/Green-Box/refs/heads/master/.github/Mock/courses.json/"
+            "https://raw.githubusercontent.com/KimA-Mik/Green-Box/refs/heads/master/.github/Mock/courses.json"
 
         const val DATE_FORMAT = "yyyy-MM-dd"
     }

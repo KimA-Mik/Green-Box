@@ -47,6 +47,9 @@ dependencies {
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.serialization.protobuf)
 
+    //Loggers
+    implementation(libs.slf4j.android)
+    implementation(libs.uk.slf4j.android)
 
     implementation(project(mapOf("path" to ":domain")))
 
