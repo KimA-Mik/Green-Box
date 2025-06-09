@@ -15,7 +15,7 @@ fun GBNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (showOnboarding) Routs.Onboarding else Routs.Auth
+        startDestination = if (showOnboarding) Rout.Onboarding else Rout.Auth
     ) {
         onboarding(acceptOnboarding)
         authGraph()

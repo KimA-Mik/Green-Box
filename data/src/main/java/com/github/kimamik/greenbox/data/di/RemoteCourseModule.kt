@@ -25,15 +25,6 @@ object RemoteCourseModule {
             json()
         }
     }
-
-    @Provides
-    @Singleton
-    fun provideKtorRemoteCourseDataSource(client: HttpClient) = KtorRemoteCourseDataSource(client)
-
-    @Provides
-    @Singleton
-    fun provideRemoteCourseRepositoryImpl(dataSource: RemoteCourseDataSource) =
-        RemoteCourseRepositoryImpl(dataSource)
 }
 
 @Module

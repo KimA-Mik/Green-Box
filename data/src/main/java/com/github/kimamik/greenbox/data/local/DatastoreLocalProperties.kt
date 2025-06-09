@@ -19,4 +19,20 @@ class DatastoreLocalProperties @Inject constructor(
     override suspend fun updateShowOnboarding(value: Boolean) {
         dataStore.updateData { it.copy(showOnboarding = value) }
     }
+
+    override suspend fun addCourseToFavorite(id: Long) {
+        dataStore.updateData {
+            val set = it.favoriteCourses.toMutableSet()
+            set.add(id)
+            it.copy(favoriteCourses = set)
+        }
+    }
+
+    override suspend fun removeCourseFromFavorite(id: Long) {
+        dataStore.updateData {
+            val set = it.favoriteCourses.toMutableSet()
+            set.remove(id)
+            it.copy(favoriteCourses = set)
+        }
+    }
 }

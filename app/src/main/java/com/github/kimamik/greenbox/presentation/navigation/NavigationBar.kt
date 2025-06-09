@@ -1,9 +1,7 @@
 package com.github.kimamik.greenbox.presentation.navigation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.github.kimamik.greenbox.presentation.util.GBPreview
 import com.github.kimamik.greenbox.presentation.util.LocalNavController
 
@@ -35,7 +33,8 @@ fun GBNavBar(
     NavigationBar {
         NavItem.entries.forEach { navItem ->
             val title = stringResource(navItem.titleId)
-            val selected = currentDestination?.hierarchy?.any { it.route == navItem.root } == true
+            val selected = currentDestination?.hierarchy
+                ?.any { it.hasRoute(navItem.root::class) } == true
             NavigationBarItem(
                 selected = selected,
                 onClick = {
@@ -57,14 +56,8 @@ fun GBNavBar(
 @Preview
 @Composable
 private fun GbNavBarPreview() = GBPreview {
-    val navController = rememberNavController()
-    navController.navigate(NavItem.entries.first().root) {
-        launchSingleTop = true
-    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = { GBNavBar() }
-    ) {
-        Box(Modifier.padding(it))
-    }
+    ) {}
 }

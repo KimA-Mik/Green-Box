@@ -162,7 +162,7 @@ private fun TagsFlow(
     val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = modifier
-            .horizontalScroll(scrollState)
+            .horizontalScroll(state = scrollState, enabled = false)
             .onPlaced { layoutCoordinates ->
                 coroutineScope.launch {
                     val contentWidth = layoutCoordinates.size.width

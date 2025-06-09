@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.kimamik.greenbox.R
+import com.github.kimamik.greenbox.presentation.courses.components.Course
 import com.github.kimamik.greenbox.presentation.navigation.GBNavBar
 import com.github.kimamik.greenbox.presentation.util.GBPreview
 import com.github.kimamik.greenbox.presentation.util.LocalHazeState
@@ -40,13 +43,17 @@ import dev.chrisbanes.haze.HazeState
 @Composable
 fun CoursesScreenRoot() {
     val viewModel: CourseScreenViewModel = hiltViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    CoursesScreen(state = state)
+    val state by viewModel.state.collectAsState()
+    CoursesScreen(
+        state = state,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable
 fun CoursesScreen(
     state: CourseScreenState,
+    onEvent: (CourseScreenUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val hazeState = remember { HazeState() }
@@ -57,10 +64,11 @@ fun CoursesScreen(
         CompositionLocalProvider(LocalHazeState provides hazeState) {
             CourseScreenContent(
                 state = state,
+                onEvent = onEvent,
                 modifier = Modifier
                     .padding(paddingValues)
-                    .padding(top = 16.dp)
                     .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp)
             )
         }
     }
@@ -69,6 +77,7 @@ fun CoursesScreen(
 @Composable
 fun CourseScreenContent(
     state: CourseScreenState,
+    onEvent: (CourseScreenUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -77,9 +86,12 @@ fun CourseScreenContent(
     ) {
         Search()
         Sort(modifier = Modifier.align(Alignment.End))
-        CourseScreenBody(state, modifier.fillMaxSize())
+        CourseScreenBody(
+            state = state,
+            onEvent = onEvent,
+            modifier = Modifier.fillMaxSize()
+        )
     }
-
 }
 
 @Composable
@@ -129,15 +141,40 @@ fun Sort(
 }
 
 @Composable
-fun CourseScreenBody(state: CourseScreenState, modifier: Modifier = Modifier) {
+fun CourseScreenBody(
+    state: CourseScreenState,
+    onEvent: (CourseScreenUserEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
     when (state) {
         CourseScreenState.Error -> {}
-        is CourseScreenState.Loaded -> Box(modifier = modifier) {
-            CircularProgressIndicator()
-        }
+        is CourseScreenState.Loaded -> Courses(
+            state = state,
+            onEvent = onEvent,
+            modifier = modifier
+        )
 
         CourseScreenState.Loading -> Box(modifier = modifier, contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
+        }
+    }
+}
+
+@Composable
+private fun Courses(
+    state: CourseScreenState.Loaded,
+    onEvent: (CourseScreenUserEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(state.courses, key = { it.id }) {
+            Course(
+                course = it,
+                onBookmarkClick = { onEvent(CourseScreenUserEvent.CheckBookmark(it.id)) }
+            )
         }
     }
 }
@@ -147,6 +184,7 @@ fun CourseScreenBody(state: CourseScreenState, modifier: Modifier = Modifier) {
 private fun CourseScreenPreview() = GBPreview {
     CoursesScreen(
         state = CourseScreenState.Loading,
-        Modifier.fillMaxSize()
+        onEvent = {},
+        modifier = Modifier.fillMaxSize()
     )
 }

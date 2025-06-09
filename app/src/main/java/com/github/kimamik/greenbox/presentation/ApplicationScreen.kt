@@ -23,9 +23,6 @@ fun ApplicationScreen(
                 navController = navController,
                 showOnboarding = showOnboarding,
                 acceptOnboarding = {
-//                    navController.popBackStack()
-//                    navController.navigate(Routs.Auth)
-//                    navController.
                     acceptOnboarding()
                 }
             )

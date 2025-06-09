@@ -18,7 +18,8 @@ import java.io.OutputStream
 
 @Serializable
 data class LocalSchema(
-    val showOnboarding: Boolean = true
+    val showOnboarding: Boolean = true,
+    val favoriteCourses: Set<Long> = setOf()
 )
 
 @OptIn(ExperimentalSerializationApi::class)

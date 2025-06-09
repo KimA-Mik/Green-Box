@@ -20,4 +20,5 @@
     <string name="label_sort_by_date">По дате добавления</string>
     <string name="action_course_details">Подробнее</string>
     <string name="rouble_format">%1$s ₽</string>
+    <string name="title_favorite_courses">Избранное</string>
 </resources>
